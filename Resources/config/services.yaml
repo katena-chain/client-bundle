@@ -1,0 +1,13 @@
+services:
+    KatenaChain\ClientBundle\Services\Transactor:
+        class: KatenaChain\ClientBundle\Services\Transactor
+        tags: ['katena-chain']
+        arguments:
+            $apiUrl: '%kc_client.api.url%'
+            $apiUrlSuffix: '%kc_client.api.url_suffix%'
+            $chainId: '%kc_client.chain.chain_id%'
+            $companyChainId: '%kc_client.chain.company_chain_id%'
+            $privateKeyBase64: '%kc_client.chain.private_key%'
+
+    kc_client.transactor:
+        alias: KatenaChain\ClientBundle\Services\Transactor

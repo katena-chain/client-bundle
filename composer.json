@@ -1,0 +1,22 @@
+{
+    "name": "katena-chain/client-bundle",
+    "description": "Katena Symfony Client Bundle",
+    "license": "Apache-2.0",
+    "type": "symfony-bundle",
+    "authors": [
+        {
+            "name": "TransChain",
+            "email": "contact@transchain.fr"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "katena-chain/sdk-php": "^1.0",
+        "symfony/framework-bundle": "^2.8 || ^3.0 || ^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "KatenaChain\\ClientBundle\\": ""
+        }
+    }
+}
