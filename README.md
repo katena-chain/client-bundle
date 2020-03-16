@@ -76,11 +76,10 @@ Then, add the configuration file in `app/config/kc_client.yml`
 kc_client:
     chain:
         chain_id: "%env(resolve:KC_CHAIN_ID)%"
-        company_chain_id: "%env(resolve:KC_COMPANY_CHAIN_ID)%"
+        company_bcid: "%env(resolve:KC_COMPANY_BCID)%"
         private_key: "%env(resolve:KC_PRIVATE_KEY)%"
     api:
         url: "%env(resolve:KC_API_URL)%"
-        url_suffix: "%env(resolve:KC_API_URL_SUFFIX)%"
 
 ```
 
@@ -92,11 +91,10 @@ Then, add the configuration file in `config/packages/kc_client.yml`
 kc_client:
     chain:
         chain_id: "%env(resolve:KC_CHAIN_ID)%"
-        company_chain_id: "%env(resolve:KC_COMPANY_CHAIN_ID)%"
+        company_bcid: "%env(resolve:KC_COMPANY_BCID)%"
         private_key: "%env(resolve:KC_PRIVATE_KEY)%"
     api:
         url: "%env(resolve:KC_API_URL)%"
-        url_suffix: "%env(resolve:KC_API_URL_SUFFIX)%"
 ```
 
 ### Step 4: Update .env file
@@ -105,10 +103,9 @@ Add in your .env file :
 ```dotenv
 ###> katena-chain/client-bundle ###
 KC_PRIVATE_KEY="7C67DeoLnhI6jvsp3eMksU2Z6uzj8sqZbpgwZqfIyuCZbfoPcitCiCsSp2EzCfkY52Mx58xDOyQLb1OhC7cL5A==" # private Key encoded in base64
-KC_COMPANY_CHAIN_ID="abcdef" # company chain id
-KC_CHAIN_ID="katena-chain" # chain ID
-KC_API_URL="https://api.demo.katena.transchain.io" # api url
-KC_API_URL_SUFFIX="/api/v1" # api url suffix
+KC_COMPANY_BCID="abcdef" # company blockchain chain id
+KC_CHAIN_ID="katena-chain-test" # chain ID
+KC_API_URL="https://nodes.test.katena.transchain.io/api/v1" # api url
 ###< katena-chain/client-bundle###
 ```
 ## Usage
@@ -140,7 +137,7 @@ use KatenaChain\ClientBundle\Services\Transactor;
 ### Via service container
 
 ```php
-$transactor = $this->get("kc_client.transactor")
+$transactor = $this->get("kc_client.transactor");
 ```
 
 ### Send certificate

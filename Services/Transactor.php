@@ -13,14 +13,15 @@ use GuzzleHttp\Exception\GuzzleException;
 
 use KatenaChain\Client\Crypto\ED25519\PublicKey as ED25519PubKey;
 use KatenaChain\Client\Crypto\Nacl\PublicKey as NaclPubKey;
+use KatenaChain\Client\Entity\Account\KeyV1;
 use KatenaChain\Client\Entity\Api\TxStatus;
 use KatenaChain\Client\Entity\Api\TxWrapper;
 use KatenaChain\Client\Entity\Api\TxWrappers;
 use KatenaChain\Client\Entity\Bytes;
 use KatenaChain\Client\Exceptions\ApiException;
+use KatenaChain\Client\Exceptions\ClientException;
 use KatenaChain\Client\Transactor as SDKTransactor;
 use KatenaChain\Client\Utils\Crypto;
-use KatenaChain\Client\Utils\Uri;
 use SodiumException;
 
 class Transactor
@@ -33,16 +34,14 @@ class Transactor
     /**
      * Transacter constructor.
      * @param string $apiUrl
-     * @param string $apiUrlSuffix
      * @param string $chainId
      * @param string $privateKeyBase64 (base64)
-     * @param string $companyChainId
+     * @param string $companyBcid
      */
     public function __construct(
         string $apiUrl,
-        string $apiUrlSuffix,
         string $chainId,
-        string $companyChainId = "",
+        string $companyBcid = "",
         ?string $privateKeyBase64 = null
     )
     {
@@ -52,8 +51,7 @@ class Transactor
             $privateKey = null;
         }
 
-        $url = Uri::getUri($apiUrl, [$apiUrlSuffix]);
-        $this->client = new SDKTransactor($url, $chainId, $companyChainId, $privateKey);
+        $this->client = new SDKTransactor($apiUrl, $chainId, $companyBcid, $privateKey);
     }
 
     /**
@@ -63,6 +61,7 @@ class Transactor
      * @throws ApiException
      * @throws GuzzleException
      * @throws SodiumException
+     * @throws ClientException
      */
     public function sendCertificateRawV1(string $uuid, string $value): TxStatus
     {
@@ -77,6 +76,7 @@ class Transactor
      * @throws ApiException
      * @throws GuzzleException
      * @throws SodiumException
+     * @throws ClientException
      */
     public function sendCertificateEd25519V1(string $uuid, ED25519PubKey $signer, string $signature): TxStatus
     {
@@ -84,28 +84,34 @@ class Transactor
     }
 
     /**
-     * @param string $companyChainId
      * @param string $uuid
-     * @return TxWrapper
+     * @param Ed25519PubKey $publicKey
+     * @param string $role
+     * @return TxStatus
      * @throws ApiException
+     * @throws ClientException
      * @throws GuzzleException
+     * @throws SodiumException
      */
-    public function retrieveCertificate(string $companyChainId, string $uuid): TxWrapper
+    public function sendKeyCreateV1(string $uuid, Ed25519PubKey $publicKey, string $role): TxStatus
     {
-        return $this->client->retrieveCertificate($companyChainId, $uuid);
+        return $this->client-$this->sendKeyCreateV1($uuid, $publicKey, $role);
     }
 
     /**
-     * @param string $companyChainId
      * @param string $uuid
-     * @return TxWrappers
+     * @param Ed25519PubKey $publicKey
+     * @return TxStatus
      * @throws ApiException
+     * @throws ClientException
      * @throws GuzzleException
+     * @throws SodiumException
      */
-    public function retrieveCertificatesHistory(string $companyChainId, string $uuid): TxWrappers
+    public function sendKeyRevokeV1(string $uuid, Ed25519PubKey $publicKey): TxStatus
     {
-        return $this->client->retrieveCertificatesHistory($companyChainId, $uuid);
+        return $this->client-$this->sendKeyRevokeV1($uuid, $publicKey);
     }
+
 
     /**
      * @param string $certificateUuid
@@ -116,6 +122,7 @@ class Transactor
      * @throws ApiException
      * @throws GuzzleException
      * @throws SodiumException
+     * @throws ClientException
      */
     public function sendSecretNaclBoxV1(
         string $certificateUuid,
@@ -128,14 +135,98 @@ class Transactor
     }
 
     /**
-     * @param string $companyChainId
+     * @param string $companyBcid
      * @param string $uuid
+     * @return TxWrapper
+     * @throws ApiException
+     * @throws GuzzleException
+     */
+    public function retrieveLastCertificate(string $companyBcid, string $uuid): TxWrapper
+    {
+        return $this->client->retrieveLastCertificate($companyBcid, $uuid);
+    }
+
+    /**
+     * @param string $companyBcid
+     * @param string $uuid
+     * @param int $page
+     * @param int $txPerPage
      * @return TxWrappers
      * @throws ApiException
      * @throws GuzzleException
      */
-    public function retrieveSecrets(string $companyChainId, string $uuid): TxWrappers
+    public function retrieveCertificates(string $companyBcid, string $uuid, int $page, int $txPerPage): TxWrappers
     {
-        return $this->client->retrieveSecretsV1($companyChainId, $uuid);
+        return $this->client->retrieveCertificates($companyBcid, $uuid, $page, $txPerPage);
+    }
+
+    /**
+     * @param string $companyBcid
+     * @param string $uuid
+     * @param int $page
+     * @param int $txPerPage
+     * @return TxWrappers
+     * @throws ApiException
+     * @throws GuzzleException
+     */
+    public function retrieveKeyCreateTxs(string $companyBcid, string $uuid, int $page, int $txPerPage): TxWrappers
+    {
+        return $this->client->retrieveKeyCreateTxs($companyBcid, $uuid, $page, $txPerPage);
+    }
+
+    /**
+     * @param string $companyBcid
+     * @param string $uuid
+     * @param int $page
+     * @param int $txPerPage
+     * @return TxWrappers
+     * @throws ApiException
+     * @throws GuzzleException
+     */
+    public function retrieveKeyRevokeTxs(string $companyBcid, string $uuid, int $page, int $txPerPage): TxWrappers
+    {
+        return $this->client->retrieveKeyRevokeTxs($companyBcid, $uuid, $page, $txPerPage);
+    }
+
+    /**
+     * @param string $companyBcid
+     * @param int $page
+     * @param int $txPerPage
+     * @return KeyV1[]
+     * @throws ApiException
+     * @throws GuzzleException
+     */
+    public function retrieveCompanyKeys(string $companyBcid, int $page, int $txPerPage): array
+    {
+        return $this->client->retrieveCompanyKeys($companyBcid, $page, $txPerPage);
+    }
+
+    /**
+     * @param string $companyBcid
+     * @param string $uuid
+     * @param int $page
+     * @param int $txPerPage
+     * @return TxWrappers
+     * @throws ApiException
+     * @throws GuzzleException
+     */
+    public function retrieveSecrets(string $companyBcid, string $uuid, int $page, int $txPerPage): TxWrappers
+    {
+        return $this->client->retrieveSecrets($companyBcid, $uuid, $page, $txPerPage);
+    }
+
+    /**
+     * @param string $txCategory
+     * @param string $companyBcid
+     * @param string $uuid
+     * @param int $page
+     * @param int $txPerPage
+     * @return TxWrappers
+     * @throws ApiException
+     * @throws GuzzleException
+     */
+    public function retrieveTxs(string $txCategory, string $companyBcid, string $uuid, int $page, int $txPerPage): TxWrappers
+    {
+        return $this->client->retrieveTxs($txCategory, $companyBcid, $uuid, $page, $txPerPage);
     }
 }

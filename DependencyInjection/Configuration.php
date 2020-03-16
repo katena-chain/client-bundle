@@ -37,7 +37,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode(self::CHAIN_KEY)
                     ->isRequired()
                     ->children()
-                    ->scalarNode("company_chain_id")->defaultValue("")->end()
+                    ->scalarNode("company_bcid")->defaultValue("")->end()
                     ->scalarNode("chain_id")->isRequired()->cannotBeEmpty()->end()
                     ->scalarNode("private_key")->defaultValue("")->end()
                 ->end()
@@ -46,8 +46,7 @@ class Configuration implements ConfigurationInterface
                     ->isRequired()
                     ->children()
                     ->scalarNode("url")->isRequired()->cannotBeEmpty()->end()
-                    ->scalarNode("url_suffix")->isRequired()->cannotBeEmpty()->end()
-            ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;

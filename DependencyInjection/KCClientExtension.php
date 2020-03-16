@@ -35,12 +35,11 @@ class KCClientExtension extends Extension
         $configKeys = [
             Configuration::CHAIN_KEY => [
                 "chain_id",
-                "company_chain_id",
+                "company_bcid",
                 "private_key"
             ],
             Configuration::API_KEY => [
                 "url",
-                "url_suffix"
             ]
         ];
 

@@ -4,9 +4,8 @@ services:
         tags: ['katena-chain']
         arguments:
             $apiUrl: '%kc_client.api.url%'
-            $apiUrlSuffix: '%kc_client.api.url_suffix%'
             $chainId: '%kc_client.chain.chain_id%'
-            $companyChainId: '%kc_client.chain.company_chain_id%'
+            $companyBcid: '%kc_client.chain.company_bcid%'
             $privateKeyBase64: '%kc_client.chain.private_key%'
 
     kc_client.transactor:
