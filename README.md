@@ -76,8 +76,9 @@ Then, add the configuration file in `app/config/kc_client.yml`
 kc_client:
     chain:
         chain_id: "%env(resolve:KC_CHAIN_ID)%"
-        company_bcid: "%env(resolve:KC_COMPANY_BCID)%"
-        private_key: "%env(resolve:KC_PRIVATE_KEY)%"
+        signer_company_bcid: "%env(resolve:KC_SIGNER_COMPANY_BCID)%"
+        signer_id: "%env(resolve:KC_SIGNER_ID)%"
+        signer_private_key: "%env(resolve:KC_SIGNER_PRIVATE_KEY)%"
     api:
         url: "%env(resolve:KC_API_URL)%"
 
@@ -91,8 +92,9 @@ Then, add the configuration file in `config/packages/kc_client.yml`
 kc_client:
     chain:
         chain_id: "%env(resolve:KC_CHAIN_ID)%"
-        company_bcid: "%env(resolve:KC_COMPANY_BCID)%"
-        private_key: "%env(resolve:KC_PRIVATE_KEY)%"
+        signer_company_bcid: "%env(resolve:KC_SIGNER_COMPANY_BCID)%"
+        signer_id: "%env(resolve:KC_SIGNER_ID)%"
+        signer_private_key: "%env(resolve:KC_SIGNER_PRIVATE_KEY)%"
     api:
         url: "%env(resolve:KC_API_URL)%"
 ```
@@ -102,10 +104,11 @@ kc_client:
 Add in your .env file :
 ```dotenv
 ###> katena-chain/client-bundle ###
-KC_PRIVATE_KEY="7C67DeoLnhI6jvsp3eMksU2Z6uzj8sqZbpgwZqfIyuCZbfoPcitCiCsSp2EzCfkY52Mx58xDOyQLb1OhC7cL5A==" # private Key encoded in base64
-KC_COMPANY_BCID="abcdef" # company blockchain chain id
-KC_CHAIN_ID="katena-chain-test" # chain ID
-KC_API_URL="https://nodes.test.katena.transchain.io/api/v1" # api url
+KC_SIGNER_PRIVATE_KEY="7C67DeoLnhI6jvsp3eMksU2Z6uzj8sqZbpgwZqfIyuCZbfoPcitCiCsSp2EzCfkY52Mx58xDOyQLb1OhC7cL5A=="
+KC_SIGNER_COMPANY_BCID="abcdef"
+KC_SIGNER_ID="36b72ca9-fd58-44aa-b90d-5a855276ff82"
+KC_CHAIN_ID="katena-chain-test"
+KC_API_URL="https://nodes.test.katena.transchain.io/api/v1"
 ###< katena-chain/client-bundle###
 ```
 ## Usage
@@ -143,7 +146,7 @@ $transactor = $this->get("kc_client.transactor");
 ### Send certificate
 
 ```php
-$transactor->sendCertificateRawV1("2075c941-6876-405b-87d5-13791c0dc53a", "document_signature_value");
+$transactor->sendCertificateRawV1Tx("ce492f92-a529-40c1-91e9-2af71e74ebea", "document_signature_value");
 ```
 
 ## Katena documentation

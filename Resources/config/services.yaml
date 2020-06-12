@@ -5,8 +5,9 @@ services:
         arguments:
             $apiUrl: '%kc_client.api.url%'
             $chainId: '%kc_client.chain.chain_id%'
-            $companyBcid: '%kc_client.chain.company_bcid%'
-            $privateKeyBase64: '%kc_client.chain.private_key%'
+            $signerCompanyBcId: '%kc_client.chain.signer_company_bcid%'
+            $signerId: '%kc_client.chain.signer_id%'
+            $signerPrivateKeyBase64: '%kc_client.chain.signer_private_key%'
 
     kc_client.transactor:
         alias: KatenaChain\ClientBundle\Services\Transactor
